@@ -427,3 +427,69 @@ Troubleshooting
 ```bash
 docker compose logs -f
 ```
+
+# VM Benchmark Setup (Debian + Flask + Apache Bench)
+
+Mini experiment setup for benchmarking a web application deployed in a Virtual Machine (VM) environment. This setup is used for Distributed Computing experiments comparing VM and container performance.
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Prerequisites](#prerequisites)
+- [VM Setup (Debian)](#vm-setup-debian)
+- [Running the Application](#running-the-application)
+- [Benchmarking](#benchmarking)
+- [Results Collection](#results-collection)
+- [Notes](#notes)
+
+---
+
+## Overview
+
+This setup deploys a lightweight Flask web application inside a Debian-based Virtual Machine and measures performance using Apache Bench.
+
+The goal is to evaluate:
+
+- Throughput (requests/sec)
+- Latency (time per request)
+- Stability under concurrent load
+
+---
+
+## Prerequisites
+
+### Host Machine
+
+- macOS (Apple Silicon - M2)
+- UTM (Virtual Machine Manager)
+
+### Inside VM
+
+- Debian ARM64
+- Python 3
+- Apache Bench (`ab`)
+
+---
+
+## VM Setup (Debian)
+
+### 1. Install Debian in UTM
+
+- Download ISO:
+  https://cdimage.debian.org/debian-cd/current/arm64/iso-cd/debian-13.4.0-arm64-netinst.iso
+- Create VM in UTM
+- Recommended allocation:
+  - RAM: 4GB
+  - Storage: 20GB
+- Complete installation
+
+---
+
+### 2. Install Dependencies
+
+```bash
+sudo apt update
+sudo apt install python3 python3-pip apache2-utils -y
+```
