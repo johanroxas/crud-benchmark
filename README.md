@@ -1,6 +1,6 @@
 # CRUD Benchmark App
 
-Lightweight CRUD API for benchmarking performance across virtualization environments (containers vs VMs). Built with Node.js (Express) + SQLite for reproducible, real-world testing.
+Lightweight CRUD API for benchmarking performance across virtualization environments (containers vs VMs). Built with Node.js (Express) + PostgreSQL for reproducible, real-world testing.
 
 ## Table of Contents
 
@@ -18,12 +18,12 @@ Lightweight CRUD API for benchmarking performance across virtualization environm
 
 This application supports **Distributed Computing research experiments** comparing performance between Docker containers and VMs. It provides:
 
-- ✅ Lightweight CRUD operations backed by SQLite
+- ✅ Lightweight CRUD operations backed by PostgreSQL
 - ✅ Reproducible, containerized deployment
 - ✅ Automated benchmarking tools for startup time, resource usage, and response testing
 - ✅ Load testing capabilities (sequential and concurrent)
 
-**Stack**: Node.js (Express) + SQLite + Docker Compose
+**Stack**: Node.js (Express) + PostgreSQL + Docker Compose
 
 ## Prerequisites
 
@@ -48,8 +48,7 @@ This application supports **Distributed Computing research experiments** compari
 ├── docker-compose.yml    # Docker Compose configuration
 ├── benchmark.sh          # Full benchmarking suite
 ├── simple-load-test.sh   # Quick load test (100 requests)
-├── README.md             # This file
-└── tasks.db              # SQLite database (generated)
+└── README.md             # This file
 ```
 
 ## Setup & Installation
@@ -61,11 +60,8 @@ This application supports **Distributed Computing research experiments** compari
 git clone https://github.com/johanroxas/crud-benchmark.git
 cd crud-benchmark
 
-# Install dependencies
-```
-
 pnpm install
-npm install
+```
 
 ### 2. Verify Installation
 
@@ -91,23 +87,32 @@ This is the preferred method for consistent, reproducible results.
 # Build the container image
 docker-compose build
 
-# Start the app (runs with nodemon for auto-reload)
+# Start the app and PostgreSQL (runs with nodemon for auto-reload)
 docker-compose up
 
 # View logs
 docker-compose logs -f
 
-# Stop the app
+# Stop the app and database
 docker-compose down
 ```
 
 The API will be available at: **http://localhost:3000**
 
-### Option B: Local Development (Without Docker)
+### Option B: Local Development (App Outside Docker)
+
+Start PostgreSQL first:
+
+```bash
+docker-compose up -d db
+```
 
 ```bash
 # Install dependencies
 pnpm install
+
+# Configure the database connection
+export DATABASE_URL=postgres://postgres:postgres@localhost:5432/crud_benchmark
 
 # Start with hot-reload via nodemon
 pnpm run dev
@@ -122,7 +127,7 @@ The API will be available at: **http://localhost:3000**
 
 ```bash
 pnpm install --prod
-node index.js
+DATABASE_URL=postgres://postgres:postgres@localhost:5432/crud_benchmark pnpm start
 ```
 
 ## API Reference
@@ -193,7 +198,7 @@ curl http://localhost:3000/tasks
 
 ```bash
 pnpm run dev    # Start with nodemon (auto-reload)
-npm start       # Run in production mode (used by Docker)
+pnpm start      # Run without nodemon
 ```
 
 ## Benchmarking

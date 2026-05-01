@@ -2,8 +2,31 @@ services:
   app:
     build: .
     container_name: crud-benchmark-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/crud_benchmark
     ports:
       - "3000:3000"
     volumes:
       - .:/app
       - /app/node_modules
+
+  db:
+    image: postgres:16-alpine
+    container_name: crud-benchmark-db
+    environment:
+      POSTGRES_DB: crud_benchmark
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d crud_benchmark"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  postgres_data:
